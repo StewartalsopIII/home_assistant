@@ -144,14 +144,34 @@ It’s written so future-me can quickly recognize a symptom, understand the like
 - Triggered by attempting to send too much audio too fast over UDP:
   - capturing at **48kHz / 32‑bit / stereo** and sending many small UDP packets overwhelms lwIP buffers.
 
-### Fix direction (not fully landed yet)
-- Reduce bandwidth before sending:
-  - downsample to **16kHz / 16‑bit / mono** before UDP, or
-  - reduce sample rate / bit depth at capture if supported by the integration.
-- Ensure the ESPHome YAML being compiled/flashed is the same one being edited (watch for `/config/respeaker.yaml` vs repo paths).
+### ✅ RESOLVED (2025-12-29)
+
+**Solution**: Changed microphone sample_rate from 48000 to 16000 in `esphome/respeaker.yaml` line 1217.
+
+```yaml
+microphone:
+  - platform: i2s_audio
+    sample_rate: 16000  # Changed from 48000
+```
+
+**Results**:
+- Bandwidth reduced: 384 KB/sec → 128 KB/sec (3x reduction)
+- UDP errors completely eliminated
+- Voice assistant now works reliably
+- Audio flows properly to Home Assistant Assist
+
+**Why it worked**: The ESP32's hardware I2S interface supports 16kHz natively, eliminating the need for complex software downsampling. This simple one-line change proved the "DHH approach" - try the simplest thing first.
+
+**Commit**: `b50f7d6` - "Fix: Reduce microphone sample rate to 16kHz to resolve UDP bandwidth issue"
+
+### Fix direction (implemented)
+- ✅ Reduced sample rate at hardware level (48kHz → 16kHz)
+- ✅ Verified ESPHome YAML path matches container mount (`/config/respeaker.yaml`)
+- ✅ Tested end-to-end: wake word → speech recognition → response
 
 ### Why this matters
-- Until `sendto()` stops failing, the Pi bridge will receive **no audio**, and Vapi will never engage.
+- This was the **critical blocking issue** preventing voice assistant from working
+- Without this fix, no audio could flow from ESP32 to any voice service
 
 ## 11) Repo path mismatch: `/config/respeaker.yaml` vs `esphome/respeaker.yaml`
 
