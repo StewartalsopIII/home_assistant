@@ -1,0 +1,44 @@
+# Secrets
+secrets.yaml
+.env
+.env.local
+.env.*.local
+*token*
+*apikey*
+*api_key*
+*password*
+*credential*
+*.key
+*.pem
+
+# Backups (often contain secrets)
+backups/
+*.tar.gz
+
+# ESPHome build
+.esphome/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Home Assistant
+.HA_VERSION
+.ha_run.lock
+deps/
+.storage/
+.cloud/
+tts/
+*.log*
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+
+# Editor
+.vscode/
+.idea/
+*.swp
