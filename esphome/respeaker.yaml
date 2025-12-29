@@ -1214,7 +1214,7 @@ microphone:
     i2s_din_pin: GPIO43
     adc_type: external
     pdm: false
-    sample_rate: 48000
+    sample_rate: 16000
     bits_per_sample: 32bit
     i2s_mode: secondary
     i2s_audio_id: i2s_input

@@ -1,0 +1,17 @@
+[Unit]
+Description=Vapi Bridge (ESPHome UDP ↔ Vapi WebSocket)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=stewartalsop
+WorkingDirectory=/home/stewartalsop/prototypes/home-assistant
+EnvironmentFile=/home/stewartalsop/prototypes/home-assistant/.env
+ExecStart=/usr/bin/python3 -m vapi_bridge.main
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+
